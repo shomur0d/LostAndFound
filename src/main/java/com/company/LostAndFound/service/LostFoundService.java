@@ -3,6 +3,7 @@ package com.company.LostAndFound.service;
 import com.company.LostAndFound.dto.LostFoundDTO;
 import com.company.LostAndFound.entity.LostFoundEntity;
 import com.company.LostAndFound.entity.ProfileEntity;
+import com.company.LostAndFound.enums.LostFoundStatus;
 import com.company.LostAndFound.exeptions.BadRequestException;
 import com.company.LostAndFound.exeptions.ItemNotFoundException;
 import com.company.LostAndFound.repository.LostFoundRepository;
@@ -34,6 +35,7 @@ public class LostFoundService {
         entity.setCreatedDate(LocalDateTime.now());
         entity.setProfile(profile);
         entity.setType(dto.getType());
+        entity.setStatus(LostFoundStatus.ACTIVE);
 
         lostFoundRepository.save(entity);
         dto.setId(entity.getId());

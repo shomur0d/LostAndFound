@@ -22,7 +22,7 @@ public class CommentService {
 
     public CommentDTO create(CommentDTO dto, Integer userId){
         ProfileEntity profile = profileService.get(userId);
-        LostFoundEntity lostfound = lostFoundService.get(dto.getLostFoundID());
+        LostFoundEntity lostFound = lostFoundService.get(dto.getLostFoundID());
 
         if (dto.getContent() == null || dto.getContent().isEmpty()){
             throw new BadRequestException("Content can not be null");
@@ -31,7 +31,7 @@ public class CommentService {
         CommentEntity entity = new CommentEntity();
         entity.setContent(dto.getContent());
         entity.setProfile(profile);
-        entity.setLostFound(lostfound);
+        entity.setLostFound(lostFound);
         entity.setCreatedDate(LocalDateTime.now());
 
         commentRepository.save(entity);

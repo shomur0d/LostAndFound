@@ -25,7 +25,7 @@ public class AuthService {
 
     public ProfileDTO authorization(AuthorizationDTO dto) {
         String password = DigestUtils.md5Hex(dto.getPassword());
-        Optional<ProfileEntity> optional = profileRepository.findByLoginAndPswd(dto.getLogin(),password);
+        Optional<ProfileEntity> optional = profileRepository.findByLoginAndPassword(dto.getLogin(),password);
         if (!optional.isPresent()){
             throw new RuntimeException("Login or password is incorrect");
         }
