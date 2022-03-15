@@ -14,12 +14,11 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LostFoundDTO {
     private Integer id;
-    //@NotEmpty(message = "Title can not be null dude!")
+    @NotEmpty(message = "Title can not be null dude!")
     private String title;
-    //@NotEmpty(message = "Content can not be null dude!")
+    @NotEmpty(message = "Content can not be null dude!")
     private String content;
     private Integer profileId;
-    //@NotEmpty(message = "You forgot to write type dude!")
     private LostFoundType type;
     private LostFoundStatus status;
     private LocalDateTime createdDate;

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LostFoundService {
@@ -42,6 +44,34 @@ public class LostFoundService {
         return dto;
     }
 
+    public List<LostFoundDTO> getAll() {
+        return lostFoundRepository.findAll().stream()
+                .map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public List<LostFoundDTO> getAllByStatus(String status){
+        return lostFoundRepository.findByStatus(status).stream()
+                .map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public String updateStatus(Integer lostFoundId, Integer userId) {
+        ProfileEntity profileEntity = profileService.get(userId);
+
+        LostFoundEntity entity = get(lostFoundId);
+        entity.setStatus(LostFoundStatus.DONE);
+        return "Status updated to DONE";
+    }
+
+    public LostFoundDTO getById(Integer id) {
+        return lostFoundRepository.findById(id).map(this::toDTO)
+                .orElseThrow(() -> new RuntimeException("NOT EXIST"));
+    }
+
+    public LostFoundDTO deleteById(Integer id) {
+        LostFoundDTO dto = getById(id);
+        lostFoundRepository.deleteById(id);
+        return dto;
+    }
 
 
 
