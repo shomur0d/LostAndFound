@@ -54,12 +54,12 @@ public class LostFoundService {
                 .map(this::toDTO).collect(Collectors.toList());
     }
 
-    public String updateStatus(Integer lostFoundId, Integer userId) {
+    public void updateStatus(Integer lostFoundId, Integer userId) {
         ProfileEntity profileEntity = profileService.get(userId);
 
         LostFoundEntity entity = get(lostFoundId);
         entity.setStatus(LostFoundStatus.DONE);
-        return "Status updated to DONE";
+        lostFoundRepository.save(entity);
     }
 
     public LostFoundDTO getById(Integer id) {

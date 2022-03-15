@@ -69,6 +69,11 @@ public class CommentService {
                 .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    public List<CommentDTO> getByLid(Integer lostFoundId) {
+        return commentRepository.findByLostFound_Id(lostFoundId)
+                .stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
 
     public CommentEntity get(Integer id) {
         return commentRepository.findById(id)

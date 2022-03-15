@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Integer> {
     List<CommentEntity> findByProfile_Id(Integer profileId);
+    List<CommentEntity> findByLostFound_Id(Integer lostFoundId);
 
 }

@@ -29,6 +29,13 @@ public class CommentController {
         return ResponseEntity.ok(commentService.create(dto, jwtDTO.getId()));
     }
 
+    @GetMapping
+    @ApiOperation(value = "Get All Comments", notes = "Auth required")
+    public ResponseEntity getAll(HttpServletRequest request) {
+        JwtUtil.getProfile(request);
+        return ResponseEntity.ok(commentService.getAll());
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get Comment By Id")
     public CommentDTO getById(@PathVariable("id") Integer id,
@@ -65,6 +72,12 @@ public class CommentController {
     @ApiOperation(value = "Get By ProfileId", notes = "None required")
     public ResponseEntity getByPid(@PathVariable Integer pid){
         return ResponseEntity.ok(commentService.getByPid(pid));
+    }
+
+    @GetMapping("/lid/{lid}")
+    @ApiOperation(value = "Get By lostFound id", notes = "None required")
+    public ResponseEntity getByLostFoundId(@PathVariable Integer lid){
+        return ResponseEntity.ok(commentService.getByLid(lid));
     }
 
 
