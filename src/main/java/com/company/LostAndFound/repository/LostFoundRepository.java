@@ -2,12 +2,14 @@ package com.company.LostAndFound.repository;
 
 import com.company.LostAndFound.entity.LostFoundEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface LostFoundRepository extends JpaRepository<LostFoundEntity, Integer> {
+public interface LostFoundRepository extends JpaRepository<LostFoundEntity, Integer>,
+        JpaSpecificationExecutor<LostFoundEntity> {
 
     List<LostFoundEntity> findByStatus(String status);
 

@@ -1,16 +1,21 @@
 package com.company.LostAndFound.service;
 
 import com.company.LostAndFound.dto.LostFoundDTO;
+import com.company.LostAndFound.dto.filter.LostFoundFilterDTO;
 import com.company.LostAndFound.entity.LostFoundEntity;
 import com.company.LostAndFound.entity.ProfileEntity;
 import com.company.LostAndFound.enums.LostFoundStatus;
 import com.company.LostAndFound.exeptions.BadRequestException;
 import com.company.LostAndFound.exeptions.ItemNotFoundException;
 import com.company.LostAndFound.repository.LostFoundRepository;
+import com.company.LostAndFound.spec.LostFoundSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -107,6 +112,45 @@ public class LostFoundService {
         lostFoundRepository.deleteById(id);
         return dto;
     }
+
+
+
+    public PageImpl<LostFoundDTO> filterSpecification(int page, int size, LostFoundFilterDTO filterDTO){
+        Pageable pageable = PageRequest.of(page, size);
+        Specification<LostFoundEntity> spec = null;
+        if (filterDTO.getStatus() != null) {
+            spec = Specification.where(LostFoundSpecification.status(filterDTO.getStatus()));
+        } else {
+            spec = Specification.where(LostFoundSpecification.status(LostFoundStatus.ACTIVE));
+        }
+
+        if (filterDTO.getTitle() != null) {
+            spec.and(LostFoundSpecification.title(filterDTO.getTitle()));
+        }
+        if (filterDTO.getId() != null) {
+            spec.and(LostFoundSpecification.equal("id", filterDTO.getId()));
+        }
+        if (filterDTO.getType() != null){
+            spec.and(LostFoundSpecification.type(filterDTO.getType()));
+        }
+        if (filterDTO.getProfileId() != null) {
+            spec.and(LostFoundSpecification.equal("profile.id", filterDTO.getProfileId()));
+        }
+        if (filterDTO.getFromDate() != null) {
+            spec.and(LostFoundSpecification.greaterThanOrEqualTo("createdDate", filterDTO.getFromDate()));
+        }
+        if (filterDTO.getToDate() != null) {
+            spec.and(LostFoundSpecification.lessThanOrEqualTo("createdDate", filterDTO.getToDate()));
+        }
+
+        Page<LostFoundEntity> entitiyPage = lostFoundRepository.findAll(spec, pageable);
+        List<LostFoundDTO> content = entitiyPage.getContent().stream()
+                .map(this::toDTO).collect(Collectors.toList());
+
+        return new PageImpl<LostFoundDTO>(content, pageable, entitiyPage.getTotalElements());
+
+    }
+
 
 
 

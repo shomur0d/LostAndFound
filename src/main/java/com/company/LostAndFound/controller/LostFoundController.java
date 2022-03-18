@@ -2,6 +2,7 @@ package com.company.LostAndFound.controller;
 
 import com.company.LostAndFound.dto.LostFoundDTO;
 import com.company.LostAndFound.dto.ProfileJwtDTO;
+import com.company.LostAndFound.dto.filter.LostFoundFilterDTO;
 import com.company.LostAndFound.enums.ProfileRole;
 import com.company.LostAndFound.exeptions.BadRequestException;
 import com.company.LostAndFound.service.LostFoundService;
@@ -122,5 +123,13 @@ public class LostFoundController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/filter")
+    @ApiOperation(value = "Filtering", notes = "By Any Params")
+    public ResponseEntity filter(@RequestParam("page") int page,
+                                 @RequestParam("size") int size,
+                                 @RequestBody LostFoundFilterDTO dto) {
+
+        return ResponseEntity.ok(lostFoundService.filterSpecification(page, size, dto));
+    }
 
 }

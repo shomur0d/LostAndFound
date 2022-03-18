@@ -1,11 +1,16 @@
 package com.company.LostAndFound.service;
 
 import com.company.LostAndFound.dto.ProfileDTO;
+import com.company.LostAndFound.dto.filter.ProfileFilterDTO;
 import com.company.LostAndFound.entity.ProfileEntity;
+import com.company.LostAndFound.enums.ProfileStatus;
 import com.company.LostAndFound.exeptions.ItemNotFoundException;
 import com.company.LostAndFound.repository.ProfileRepository;
+import com.company.LostAndFound.spec.ProfileSpecification;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +53,37 @@ public class ProfileService {
         ProfileDTO dto = getById(id);
         profileRepository.deleteById(id);
         return dto;
+    }
+
+
+    public PageImpl<ProfileDTO> filterSpecification(int page, int size, ProfileFilterDTO filterDTO){
+        Pageable pageable = PageRequest.of(page, size);
+        Specification<ProfileEntity> spec = null;
+        if (filterDTO.getStatus() != null) {
+            spec = Specification.where(ProfileSpecification.status(filterDTO.getStatus()));
+        } else {
+            spec = Specification.where(ProfileSpecification.status(ProfileStatus.ACTIVE));
+        }
+
+        if (filterDTO.getName() != null) {
+            spec.and(ProfileSpecification.name(filterDTO.getName()));
+        }
+        if (filterDTO.getRole() != null) {
+            spec.and(ProfileSpecification.role(filterDTO.getRole()));
+        }
+        if (filterDTO.getId() != null) {
+            spec.and(ProfileSpecification.equal("profile", filterDTO.getId()));
+        }
+        if (filterDTO.getPhone() != null){
+            spec.and(ProfileSpecification.phone(filterDTO.getPhone()));
+        }
+
+        Page<ProfileEntity> entityPage = profileRepository.findAll(spec, pageable);
+        List<ProfileDTO> dtoList = entityPage.getContent().stream()
+                .map(this::toDTO).collect(Collectors.toList());
+
+        return new PageImpl<>(dtoList, pageable, entityPage.getTotalElements());
+
     }
 
 

@@ -2,6 +2,7 @@ package com.company.LostAndFound.controller;
 
 import com.company.LostAndFound.dto.ProfileDTO;
 import com.company.LostAndFound.dto.ProfileJwtDTO;
+import com.company.LostAndFound.dto.filter.ProfileFilterDTO;
 import com.company.LostAndFound.enums.ProfileRole;
 import com.company.LostAndFound.service.ProfileService;
 import com.company.LostAndFound.util.JwtUtil;
@@ -53,7 +54,12 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.deleteById(id));
     }
 
-
+    @PostMapping("/filter")
+    public ResponseEntity filter(@RequestParam("page") int page,
+                                 @RequestParam("size") int size,
+                                 @RequestBody ProfileFilterDTO dto) {
+        return ResponseEntity.ok(profileService.filterSpecification(page, size, dto));
+    }
 
 
 
