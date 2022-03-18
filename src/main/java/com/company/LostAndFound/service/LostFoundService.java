@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,9 +50,43 @@ public class LostFoundService {
                 .map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<LostFoundDTO> getAllByStatus(String status){
-        return lostFoundRepository.findByStatus(status).stream()
+    public List<LostFoundDTO> getAllActive() {
+        return lostFoundRepository.getAllActive().stream()
                 .map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public List<LostFoundDTO> getAllDone() {
+        return lostFoundRepository.getAllDone().stream()
+                .map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public List<LostFoundDTO> getByPid(Integer id) {
+        return lostFoundRepository.findByProfileId(id).stream().map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Integer getCountLost(){
+        Optional<Integer> optional = lostFoundRepository.getCountLOST();
+        if (optional.isPresent()){
+            return optional.get();
+        }
+        return null;
+    }
+
+    public Integer getCountFound(){
+        Optional<Integer> optional = lostFoundRepository.getCountFOUND();
+        if (optional.isPresent()){
+            return optional.get();
+        }
+        return null;
+    }
+
+    public Integer getCountDone(){
+        Optional<Integer> optional = lostFoundRepository.getCountDONE();
+        if (optional.isPresent()){
+            return optional.get();
+        }
+        return null;
     }
 
     public void updateStatus(Integer lostFoundId, Integer userId) {

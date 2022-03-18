@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/lostfound")
@@ -54,6 +55,28 @@ public class LostFoundController {
         return ResponseEntity.ok(lostFoundService.getAll());
     }
 
+    @GetMapping("/active")
+    @ApiOperation(value = "Get All Active lostFounds", notes = "Auth required")
+    public ResponseEntity getAllActive(HttpServletRequest request) {
+        JwtUtil.getProfile(request);
+        return ResponseEntity.ok(lostFoundService.getAllActive());
+    }
+
+    @GetMapping("/done")
+    @ApiOperation(value = "Get All Done lostFounds", notes = "Auth required")
+    public ResponseEntity getAllDone(HttpServletRequest request) {
+        JwtUtil.getProfile(request);
+        return ResponseEntity.ok(lostFoundService.getAllDone());
+    }
+
+    @GetMapping("/pid/{pid}")
+    @ApiOperation(value = "Get All lostFound by Profile id", notes = "Auth required")
+    public ResponseEntity getAllByPid(@PathVariable Integer pid,
+                                      HttpServletRequest request){
+        JwtUtil.getProfile(request);
+        return ResponseEntity.ok(lostFoundService.getByPid(pid));
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get an LostFound", notes = "By Id")
     public ResponseEntity getById(@PathVariable Integer id,
@@ -75,6 +98,28 @@ public class LostFoundController {
             lostFoundService.deleteById(id);
         }
         lostFoundService.deleteById(id);
+    }
+
+
+    @GetMapping("/count/lost")
+    @ApiOperation(value = "Get Count of Lost", notes = "Auth required")
+    public ResponseEntity getCountLost(){
+        Optional<Integer> response = Optional.ofNullable(lostFoundService.getCountLost());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/count/found")
+    @ApiOperation(value = "Get Count of Found", notes = "Auth required")
+    public ResponseEntity getCountFound(){
+        Optional<Integer> response = Optional.ofNullable(lostFoundService.getCountFound());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/count/done")
+    @ApiOperation(value = "Get Count of Done", notes = "Auth required")
+    public ResponseEntity getCountDone(){
+        Optional<Integer> response = Optional.ofNullable(lostFoundService.getCountDone());
+        return ResponseEntity.ok(response);
     }
 
 
